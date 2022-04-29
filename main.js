@@ -13,7 +13,7 @@ let browserOpenPromise=puppeteer.launch(
     }
 );
 
-// if prosime fullfil toh lunch() hume browser object dega(mtlb bo ek function call krega object parameter daal ke) 
+// if prosime fullfil toh lunch() hume browser object dega(mtlb bo ek function call krega object parameter daal ke)
 browserOpenPromise.then(function (browser_Object) {
     console.log("browser is open");
     // console.log(browser);   browser is an object
@@ -27,34 +27,49 @@ browserOpenPromise.then(function (browser_Object) {
     let visitingLoginPagePromise = cTab.goto("https://www.hackerrank.com/auth/login");
     return visitingLoginPagePromise;
   })
+  // if hackerrank open successfully than ---
   .then(function () {
-    console.log("Hackerrank login page opened");
+    // this is type email in email input box
     let emailTypedPromise=cTab.type("#input-1",credential.email);
     return emailTypedPromise;
   })
+    // if email typed successfully than----
   .then(function () {
-    console.log("Email Typed Successfully");
+    // this is for type password
      let passwordTypedPromise=cTab.type("#input-2",credential.password);
      return passwordTypedPromise;
   })
+  // if password typed successfully than----
   .then(function () {
-    console.log("Password Typed Successfully");
+    // now its time to click on login
     let clickOnLoginPromise=cTab.click(".ui-btn.ui-btn-large.ui-btn-primary.auth-button.ui-btn-styled");
     return clickOnLoginPromise;
   })
   .then( function () {
     console.log("I m reached inside my hackerrank profile");
-    let clickOnAlgoPromise=waitForSelector('div[data-automation= "algorithms" ]')
-    return clickOnAlgoPromise;
+    // this method to select the algorithms is not work because automation is very fast jb tak page load hoga tb tak clickOnAlgoriths bolega muje algorithm selector do but page dheere dheere load hota hai as compare to automation
+    // let clickOnAlgorithm=cTab.click(`"div[data-automation="algorithms"]`);
+    // return clickOnAlgorithm;
+    //======== Solution:-  ki hum wait krege jb tak algorithm selector load na ho jaye
+    let waitForSelectorPromise = cTab.waitForSelector(`div[data-automation="algorithms"]`);
+    waitForSelectorPromise
+      .then(function () {
+        console.log("algo btn is found yooooooooooooooooooooooooo!!!!!!!");
+        let clickPromise = cTab.click(`div[data-automation="algorithms"]`);
+        return clickPromise;
+      })
+      .then(function () {
+        console.log("algo btn is clicked");
+      })
   })
-  // .then(function () {
-  //   console.log("Algo Opened successfully");
-  // })
-  
 
-// function waitForSelector ------>
-// function waitForSelector(Algo_button_selector) {
-//   let promise=new promise(function (resolve) {
-    
-//   })
-// }
+
+
+
+
+
+
+
+  .catch(function (err) {
+    console.log(err);
+  })
